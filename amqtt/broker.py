@@ -26,7 +26,7 @@ from amqtt.adapters import (
     WebSocketsWriter,
 )
 from .plugins.manager import PluginManager, BaseContext
-
+import traceback
 
 _defaults = {
     "timeout-disconnect-delay": 2,
@@ -950,6 +950,7 @@ class Broker:
                                         f"target_session.retained_messages={target_session.retained_messages.qsize()}"
                                     )
         except CancelledError:
+            print(traceback.format_exc())
             self.logger.exception("Loop is broken due to cancelled error")
             # Wait until current broadcasting tasks end
             if running_tasks:
