@@ -950,7 +950,7 @@ class Broker:
                                         f"target_session.retained_messages={target_session.retained_messages.qsize()}"
                                     )
         except CancelledError:
-            self.logger.debug("CANCELLATION ERROR")
+            self.logger.exception("Loop is broken due to cancelled error")
             # Wait until current broadcasting tasks end
             if running_tasks:
                 self.logger.debug("Waiting for running tasks to finish")
@@ -965,6 +965,8 @@ class Broker:
         self.logger.debug("Adding message to broadcasting queue")
 
         await self._broadcast_queue.put(broadcast)
+
+        self.logger.debug("Message added to broadcasting queue")
 
     async def publish_session_retained_messages(self, session):
         self.logger.debug(
